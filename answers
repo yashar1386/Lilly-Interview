@@ -100,7 +100,7 @@ INNER JOIN TournamentTotalGoals AS TTG
 ORDER BY TGC.tournament;
 -------------------------------------------------------------------------------------------------------------
 --data quality issues
-1. There are some records in the goalscorers table that say 'NA' for the minutes that goal is scores or the player's name. This doesn't show up 
+1. There are some records in the goalscorers table that say 'NA' for the minutes that goal is scored or the player's name. This doesn't show up 
 when you search NULL values, these values need to be changed into NULL.
 to create a column that flags the mentioned records, we will do the following.
 -----
