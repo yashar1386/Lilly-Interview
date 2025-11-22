@@ -59,3 +59,89 @@ WHERE
   R.home_score = 1 AND R.away_score = 1
 GROUP BY 1 
 ORDER BY 2 DESC;
+
+Q5-
+WITH TournamentGoalCounts AS (
+  
+  SELECT R.tournament, G.scorer, COUNT(G.scorer) AS scorer_goals
+  FROM results AS R
+  INNER JOIN goalscorers AS G
+    ON R.date = G.date AND R.home_team = G.home_team AND R.away_team = G.away_team
+  GROUP BY R.tournament, G.scorer
+),
+TournamentMaxGoals AS (
+
+  SELECT tournament, MAX(scorer_goals) AS max_tournament_goals
+  FROM TournamentGoalCounts
+  GROUP BY tournament
+),
+TournamentTotalGoals AS (
+  
+  SELECT R.tournament, COUNT(G.scorer) AS total_tournament_goals
+  FROM results AS R
+  INNER JOIN goalscorers AS G
+    ON R.date = G.date AND R.home_team = G.home_team AND R.away_team = G.away_team
+  GROUP BY R.tournament
+)
+SELECT
+  TGC.tournament,
+  TGC.scorer AS top_goal_scorer,
+  TGC.scorer_goals AS goals_scored,
+  TTG.total_tournament_goals,
+  ROUND(
+    (CAST(TGC.scorer_goals AS FLOAT) * 100 / TTG.total_tournament_goals),
+    2
+  ) AS percentage_of_total_goals
+FROM TournamentGoalCounts AS TGC
+INNER JOIN TournamentMaxGoals AS TMG
+  ON TGC.tournament = TMG.tournament AND TGC.scorer_goals = TMG.max_tournament_goals
+INNER JOIN TournamentTotalGoals AS TTG
+  ON TGC.tournament = TTG.tournament
+ORDER BY TGC.tournament;
+-------------------------------------------------------------------------------------------------------------
+--data quality issues
+1. There are some records in the goalscorers table that say 'NA' for the minutes that goal is scores or the player's name. This doesn't show up 
+when you search NULL values, these values need to be changed into NULL.
+to create a column that flags the mentioned records, we will do the following.
+-----
+ALTER TABLE goalsocorers
+ADD COLUMN goal_data_issue TEXT;
+-----
+we will flag them one by one
+----------------
+UPDATE goalscorers
+SET goal_data_issue = 'Missing Minute'
+WHERE
+  minute='NA';
+--------------------------------
+UPDATE goalscorers
+SET goal_data_issue = 'Missing Minute and player'
+WHERE
+  minute='NA' and scorer='NA';
+----------------------------------
+UPDATE goalscorers
+SET goal_data_issue = 'Missing several values'
+WHERE
+  minute='NA' and scorer='NA' and own_goal='NA' and penalty='NA';
+----------------------------------------------------------
+to fix the issue we could either search and fill out the missing values or if we do not have enough time, change them all to Null
+to make analysis easier.
+----------------------------------------------------------------
+UPDATE goalscorers
+SET minute= NULL
+WHERE
+  minute='NA';
+UPDATE goalscorers
+SET scorer= NULL
+WHERE
+ scorer='NA';
+UPDATE goalscorers
+SET own_goal= NULL
+WHERE
+own_goal='NA';
+UPDATE goalscorers
+SET penalty= NULL
+WHERE
+  penalty='NA';
+-----------------------------------
+
