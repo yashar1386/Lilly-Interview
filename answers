@@ -5,3 +5,57 @@ SELECT
 FROM results
 WHERE
   date BETWEEN '1900-01-01' AND '2000-12-31';
+
+--Q2
+
+SELECT
+  winner AS country,
+  COUNT(winner) AS shootout_wins
+FROM shootouts
+GROUP BY 1
+ORDER BY 1 ASC;
+
+--Q3
+
+-- we should use a composite key consisting of data, home_team and away_team to join the 3 tables together
+
+
+SELECT
+    
+    R.date,
+    R.home_team,
+    R.away_team,
+    R.home_score,
+    R.away_score,
+    R.tournament,
+    R.city,
+    R.country,
+    R.neutral,
+
+    G.team AS goalscoring_team, 
+    G.scorer,
+    G.minute,
+    G.own_goal,
+    G.penalty,
+    
+    S.winner AS shootout_winner,
+    S.first_shooter
+
+FROM results AS R
+INNER JOIN goalscorers AS G
+  ON R.date = G.date AND R.home_team = G.home_team AND R.away_team = G.away_team
+INNER JOIN shootouts AS S
+  ON R.date = S.date AND R.home_team = S.home_team AND R.away_team = S.away_team
+
+
+--Q4
+SELECT
+  S.winner AS winning_team,
+  COUNT(S.winner) AS times_won
+FROM shootouts AS S
+INNER JOIN results AS R
+  ON R.date = S.date AND R.home_team = S.home_team AND R.away_team = S.away_team
+WHERE
+  R.home_score = 1 AND R.away_score = 1
+GROUP BY 1 
+ORDER BY 2 DESC;
