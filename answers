@@ -88,10 +88,7 @@ SELECT
   TGC.scorer AS top_goal_scorer,
   TGC.scorer_goals AS goals_scored,
   TTG.total_tournament_goals,
-  ROUND(
-    (CAST(TGC.scorer_goals AS FLOAT) * 100 / TTG.total_tournament_goals),
-    2
-  ) AS percentage_of_total_goals
+  ROUND((CAST(TGC.scorer_goals AS FLOAT) * 100 / TTG.total_tournament_goals),2) AS percentage_of_total_goals
 FROM TournamentGoalCounts AS TGC
 INNER JOIN TournamentMaxGoals AS TMG
   ON TGC.tournament = TMG.tournament AND TGC.scorer_goals = TMG.max_tournament_goals
