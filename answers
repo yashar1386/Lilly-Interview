@@ -1,1 +1,7 @@
+--Q1
 
+SELECT
+  CAST(SUM(home_score + away_score) AS FLOAT) / COUNT(*) AS average_goals_per_game
+FROM results
+WHERE
+  date BETWEEN '1900-01-01' AND '2000-12-31';
