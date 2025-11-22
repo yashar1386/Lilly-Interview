@@ -17,7 +17,7 @@ ORDER BY 1 ASC;
 
 --Q3
 
--- we should use a composite key consisting of data, home_team and away_team to join the 3 tables together
+-- we should use a composite key consisting of date, home_team and away_team to join the 3 tables together
 
 
 SELECT
