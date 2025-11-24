@@ -11,8 +11,8 @@ SELECT
   winner AS country,
   COUNT(winner) AS shootout_wins
 FROM shootouts
-GROUP BY 1
-ORDER BY 1 ASC;
+GROUP BY country
+ORDER BY country ASC;
 
 --Q3
 
@@ -56,8 +56,8 @@ INNER JOIN results AS R
   ON R.date = S.date AND R.home_team = S.home_team AND R.away_team = S.away_team
 WHERE
   R.home_score = 1 AND R.away_score = 1
-GROUP BY 1 
-ORDER BY 2 DESC;
+GROUP BY winning_team
+ORDER BY times_won DESC;
 
 Q5-
 WITH TournamentGoalCounts AS (
