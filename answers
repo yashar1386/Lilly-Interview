@@ -100,7 +100,7 @@ ORDER BY TGC.tournament;
 when you search NULL values, these values need to be changed into NULL.
 to create a column that flags the mentioned records, we will do the following.
 -----
-ALTER TABLE goalsocorers
+ALTER TABLE goalscorers
 ADD COLUMN goal_data_issue TEXT;
 -----
 we will flag them one by one
