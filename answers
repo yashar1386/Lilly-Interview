@@ -141,3 +141,6 @@ WHERE
   penalty='NA';
 -----------------------------------
 
+2. Another issue that I found was that in some games for example England vs Northern Ireland, the game was played in the country of Ireland however the neutral value 
+of the row was false which meant it must have been a home game for one of the teams. This means that the name that is used for the country name must be the old name
+and the name used for team names must be new names. this creates an inconsistency in the data and it is better to fix it.
